@@ -5,7 +5,7 @@ using UnityEngine;
 public class FinalScreenManager : MonoBehaviour
 {
     public GameCompletionState gameCompletionState;
-    public TextMeshProUGUI gameResultText, scoreText, totalKillsText, livesRescuedText;
+    public TextMeshProUGUI gameResultLabel, scoreLabel, totalKillsLabel, livesRescuedLabel;
 
     void Start()
     {
@@ -14,9 +14,9 @@ public class FinalScreenManager : MonoBehaviour
 
     void Update()
     {
-        gameResultText.text = gameCompletionState.gameCompletionStateText;
-        livesRescuedText.text = gameCompletionState.livesRescued.ToString();
-        scoreText.text = gameCompletionState.score.ToString();
+        gameResultLabel.text = gameCompletionState.gameCompletionStateText;
+        livesRescuedLabel.text = gameCompletionState.livesRescued.ToString();
+        scoreLabel.text = gameCompletionState.score.ToString();
     }
 
     public void ExitButton()
