@@ -14,6 +14,14 @@ TagManager:
   - Head
   - Pistol
   - SMG
+  - Door
+  - door
+  - button f2
+  - button f5
+  - button f1
+  - button f6
+  - button f4
+  - button f3
   layers:
   - Default
   - TransparentFX
@@ -30,7 +38,7 @@ TagManager:
   - Visual Aggravator
   - Audio Aggravator
   - AI Body Part
-  - 
+  - Post Processing
   - 
   - 
   - 

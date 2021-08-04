@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Zombie Swipes
   m_EditorClassIdentifier: 
   _audioGroup: Zombies
-  _volume: 0.156
+  _volume: 0.486
   _spatialBlend: 1
-  _priority: 128
+  _priority: 159
   _audioClipBanks:
   - Clips:
     - {fileID: 8300000, guid: 100509bb88dbfb440b243faf3093d7bf, type: 3}

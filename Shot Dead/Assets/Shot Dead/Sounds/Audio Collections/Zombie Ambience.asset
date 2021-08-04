@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45b03307cfd0a7743ab0d408f3b180cb, type: 3}
+  m_Name: Zombie Ambience
+  m_EditorClassIdentifier: 
+  _audioGroup: Zombies
+  _volume: 0.156
+  _spatialBlend: 1
+  _priority: 128
+  _audioClipBanks:
+  - Clips:
+    - {fileID: 8300000, guid: cbbd8811d2fb64c4d8e7bda748ec97fd, type: 3}
+    - {fileID: 8300000, guid: 25e11bd28c845434abd3822b4454768d, type: 3}
+    - {fileID: 8300000, guid: 669060137ee91a548b3d40f41870d350, type: 3}
+    - {fileID: 8300000, guid: 2c4f80538f81baf479d3e8a4d77c6376, type: 3}
+    - {fileID: 8300000, guid: df204a7c59fee3c429bd8b5938e2f198, type: 3}
+    - {fileID: 8300000, guid: 46c453fe912fb5344b16cbc8e2aed58a, type: 3}
