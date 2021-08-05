@@ -2,30 +2,23 @@
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
-
 public class PauseScreenManager : MonoBehaviour
 {
     public GameObject player;
     public GameObject pauseScreen;
-
     public TextMeshProUGUI status, healthStatus;
     public TextMeshProUGUI playerHealthLabel;
-
     private PlayerHealth playerHealth;
     //private CameraScript cam;
     private bool isActive;
-
     void Awake()
     {
         Time.timeScale = 1;
     }
-
     void Start()
     {
         playerHealth = player.GetComponent<PlayerHealth>();
-        //cam = player.GetComponentInChildren<CameraScript>();
     }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -33,7 +26,6 @@ public class PauseScreenManager : MonoBehaviour
             isActive = !isActive;
             PauseScreenStatus();
         }
-
         if(playerHealth.status == "ALIVE")
         {
             status.color = new Color32(21, 166, 6, 255);
@@ -47,7 +39,6 @@ public class PauseScreenManager : MonoBehaviour
             healthStatus.text = "0";
         }
     }
-
     private void PauseScreenStatus()
     {
         if (isActive)
@@ -59,7 +50,6 @@ public class PauseScreenManager : MonoBehaviour
             Resume();
         }
     }
-
     public void Resume()
     {
         isActive = false;
@@ -68,7 +58,6 @@ public class PauseScreenManager : MonoBehaviour
         //cam.enabled = true;
         Time.timeScale = 1;
     }
-
     public void Pause()
     {
         isActive = true;
@@ -79,12 +68,10 @@ public class PauseScreenManager : MonoBehaviour
 
         healthStatus.color = playerHealthLabel.color;
     }
-
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-
     public void ExitToMainMenu()
     {
         Time.timeScale = 1;

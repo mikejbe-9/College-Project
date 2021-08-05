@@ -5,7 +5,6 @@ public class CharacterManager : MonoBehaviour
 {
 	[HideInInspector]
 	public Gun1 _currentGun;
-
 	[SerializeField] private ShakeEffect        _shake              = null;
 	[SerializeField] private CapsuleCollider 	_meleeTrigger 		= null;
 	[SerializeField] private CameraBloodEffect	_cameraBloodEffect 	= null;
@@ -20,8 +19,6 @@ public class CharacterManager : MonoBehaviour
 	[SerializeField] private AudioCollection    _painSounds         = null;
 	[SerializeField] private float              _nextPainSoundTime  = 0f; 
 	[SerializeField] private float              _painSoundOffset    = 0.35f; 
-
-
 	private Collider 			_collider 			 = null;
 	private FPSController		_fpsController 		 = null;
 	private CharacterController _characterController = null;
@@ -32,7 +29,6 @@ public class CharacterManager : MonoBehaviour
 	void Start () 
 	{
 		//_anim                = GetComponent<Animator>();
-		
 		_collider 			 = GetComponent<Collider>();
 		_fpsController 		 = GetComponent<FPSController>();
 		_characterController = GetComponent<CharacterController>();
@@ -54,18 +50,15 @@ public class CharacterManager : MonoBehaviour
 	public void TakeDamage ( float amount, bool doDamage, bool doPain )
 	{
 		_health = Mathf.Max ( _health - (amount *Time.deltaTime)  , 0.0f);
-
 		if (_fpsController)
 		{
 			_fpsController.dragMultiplier = 0.0f; 
-
 		}
 		if (_cameraBloodEffect!=null)
 		{
 			_cameraBloodEffect.minBloodAmount = (1.0f - _health/100.0f) * 0.5f;
 			_cameraBloodEffect.bloodAmount = Mathf.Min(_cameraBloodEffect.minBloodAmount + 0.3f, 1.0f);	
 		}
-
         if (AudioManager.instance)
         {
 			if(doDamage && _damageSounds != null)
@@ -73,7 +66,6 @@ public class CharacterManager : MonoBehaviour
 				AudioManager.instance.PlayOneShotSound(_damageSounds.audioGroup, _damageSounds.audioClip, transform.position,
 														_damageSounds.volume, _damageSounds.spatialBlend, _damageSounds.priority);
             }
-
 			if(doPain && _painSounds != null && _nextPainSoundTime < Time.time)
             {
 				AudioClip painClip = _painSounds.audioClip;
@@ -87,21 +79,16 @@ public class CharacterManager : MonoBehaviour
             }
         }
 	}
-
 	public void DoDamage( int hitDirection = 0 )
 	{
 		if (_camera==null) return;
 		if (_gameSceneManager==null) return;
-
 		// Local Variables
 		Ray ray;
 		RaycastHit hit;
 		bool isSomethingHit	=	false;
-
 		ray = _camera.ScreenPointToRay( new Vector3( Screen.width/2, Screen.height/2, 0 ));
-
 		isSomethingHit = Physics.Raycast( ray, out hit, 1000.0f, 1<<_aiBodyPartLayer );
-		
 		if (isSomethingHit)
 		{
 			AIStateMachine stateMachine = _gameSceneManager.GetAIStateMachine( hit.rigidbody.GetInstanceID());
@@ -115,7 +102,6 @@ public class CharacterManager : MonoBehaviour
 	void Update()
 	{
 		_timer += Time.deltaTime;
-
 		if (_currentGun != null)
 		{
 			if (_currentGun.gameObject.tag == "Pistol")
@@ -126,9 +112,6 @@ public class CharacterManager : MonoBehaviour
 					{
 						if (_currentGun.canShoot)
 						{
-							//_anim.SetBool("Idle", false);
-							//_anim.SetTrigger("Shake");
-							//_shake.ScreenShake(0.2f);
 							_currentGun.Shoot();
 							DoDamage();
 						}
@@ -137,8 +120,7 @@ public class CharacterManager : MonoBehaviour
                 else
                 {
                     _currentGun.GetComponent<Animator>().SetBool("Aim", false);
-					//_anim.ResetTrigger("Shoot");
-					//_anim.SetBool("Idle", true);
+					
 				}
             }
 			else 
@@ -149,9 +131,6 @@ public class CharacterManager : MonoBehaviour
 					{
 						if (_timer >= _currentGun.fireRate && _currentGun.canShoot)
 						{
-							//_anim.SetBool("Idle", false);
-							//_anim.SetTrigger("Shake");
-							//_shake.ScreenShake(0.2f);
 							_currentGun.Shoot();
 							DoDamage();
 							_timer = 0;
@@ -165,7 +144,6 @@ public class CharacterManager : MonoBehaviour
 				}
             }
 		}
-
 		if (_fpsController && _soundEmitter!=null)
 		{
 			float newRadius = Mathf.Max( _walkRadius, (100.0f-_health)/_bloodRadiusScale);
@@ -179,6 +157,5 @@ public class CharacterManager : MonoBehaviour
 
 			_fpsController.dragMultiplierLimit = Mathf.Max(_health/100.0f, 0.25f);
 		}
-
 	}
 }

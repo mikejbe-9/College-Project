@@ -5,27 +5,14 @@ using System.Collections.Generic;
 
 public enum AIBoneControlType { Animated, Ragdoll, RagdollToAnim }
 public enum AIScreamPosition  { Entity, Player }
-
-// ----------------------------------------------------------------
-// Class	:	BodyPartSnapshot
-// Desc		:   Used to store information about the positions of
-//				each body part when transitioning from a 
-//				ragdoll
-// ----------------------------------------------------------------
 public class BodyPartSnapshot
 {
 	public Transform 	transform;
 	public Vector3   	position;
 	public Quaternion	rotation;
 }
-
-// --------------------------------------------------------------------------
-// CLASS	:	AIZombieStateMachine
-// DESC		:	State Machine used by zombie characters
-// --------------------------------------------------------------------------
 public class AIZombieStateMachine : AIStateMachine
 {
-	// Inspector Assigned
 	[SerializeField]	[Range(10.0f, 360.0f)]	float _fov 			= 50.0f;
 	[SerializeField]	[Range(0.0f, 1.0f)]		float _sight 		= 0.5f;
 	[SerializeField]	[Range(0.0f, 1.0f)]		float _hearing		= 1.0f;
@@ -47,17 +34,12 @@ public class AIZombieStateMachine : AIStateMachine
 	[SerializeField] 							float 		_reanimationBlendTime = 1.5f;
 	[SerializeField]							float 		_reanimationWaitTime	= 3.0f;
 	[SerializeField]							LayerMask	_geometryLayers			= 0;
-
-
-	// Private
 	private	int		_seeking 	= 0;
 	private bool	_feeding 	= false;
 	private bool	_crawling	= false;
 	private int		_attackType	= 0;
 	private float	_speed		= 0.0f;
 	private float	_isScreaming= 0.0f;
-
-	// Ragdoll Stuff
 	private AIBoneControlType			 _boneControlType  		= AIBoneControlType.Animated;
 	private List<BodyPartSnapshot>		 _bodyPartSnapShots		= new List<BodyPartSnapshot>();
 	private float					     _ragdollEndTime		= float.MinValue;
@@ -66,8 +48,6 @@ public class AIZombieStateMachine : AIStateMachine
 	private Vector3						 _ragdollHeadPosition;
 	private IEnumerator 				 _reanimationCoroutine  = null;
 	private float						 _mecanimTransitionTime	= 0.1f;
-
-	// Hashes
 	private int		_speedHash		=	Animator.StringToHash("Speed");
 	private int 	_seekingHash 	= 	Animator.StringToHash("Seeking");
 	private int 	_feedingHash	=	Animator.StringToHash("Feeding");
@@ -84,8 +64,6 @@ public class AIZombieStateMachine : AIStateMachine
 	private int		_stateHash				=	Animator.StringToHash("State");
 	private int		_upperBodyLayer			=	-1;
 	private int		_lowerBodyLayer			=	-1;
-
-	// Public Properties
 	public float			replenishRate{ get{ return _replenishRate;}}
 	public float			fov		 	{ get{ return _fov;		 }}
 	public float			hearing	 	{ get{ return _hearing;	 }}
@@ -112,8 +90,6 @@ public class AIZombieStateMachine : AIStateMachine
 	{
 		get{ return _isScreaming>0.1f; }
 	}
-
-	// Set the Trigger to cause screaming
 	public bool Scream()
 	{
 		if (isScreaming) return true; 
@@ -127,8 +103,6 @@ public class AIZombieStateMachine : AIStateMachine
 		 screamEmitter.SetRadius( _screamRadius  );
 		return true;
 	}
-
-	// What is the scream chance of this zombie
 	public float screamChance
 	{
 		get{ return _screamChance;}
@@ -140,12 +114,9 @@ public class AIZombieStateMachine : AIStateMachine
 
 		if (_animator!=null)
 		{
-			// Cache Layer Indices
 			_lowerBodyLayer = _animator.GetLayerIndex("Lower Body");
 			_upperBodyLayer = _animator.GetLayerIndex("Upper Body");
 		}
-
-		// Create BodyPartSnapShot List
 		if (_rootBone!=null)
 		{
 			Transform[] transforms = _rootBone.GetComponentsInChildren<Transform>();
@@ -159,16 +130,9 @@ public class AIZombieStateMachine : AIStateMachine
 
 		UpdateAnimatorDamage();
 	}
-
-	// ---------------------------------------------------------
-	// Name	:	Update
-	// Desc	:	Refresh the animator with up-to-date values for
-	//			its parameters
-	// ---------------------------------------------------------
 	protected override void Update()
 	{
 		base.Update ();
-
 		if (_animator!=null)
 		{
 			_animator.SetFloat 	    (_speedHash, 			_speed);
@@ -176,12 +140,9 @@ public class AIZombieStateMachine : AIStateMachine
 			_animator.SetInteger   	(_seekingHash,	 		_seeking);
 			_animator.SetInteger    (_attackHash,	 		_attackType);
 			_animator.SetInteger    (_stateHash,			(int)_currentStateType);
-
-			// Are we screaming or not
 			_isScreaming = IsLayerActive("Cinematic")?0.0f:_animator.GetFloat( _screamingHash );
 
 		}
-
 		_satisfaction = Mathf.Max ( 0, _satisfaction - ((_depletionRate * Time.deltaTime)/100.0f) * Mathf.Pow( _speed, 3.0f));
 	}
 
@@ -193,21 +154,17 @@ public class AIZombieStateMachine : AIStateMachine
 			{
 				_animator.SetLayerWeight( _lowerBodyLayer, (_lowerBodyDamage>_limpThreshold && _lowerBodyDamage<_crawlThreshold)?1.0f:0.0f );
 			}
-
 			if (_upperBodyLayer!=-1)
 			{
 				_animator.SetLayerWeight( _upperBodyLayer, (_upperBodyDamage>_upperBodyThreshold && _lowerBodyDamage<_crawlThreshold)?1.0f:0.0f );
 			}
-
 			_animator.SetBool( _crawlingHash, isCrawling );
 			_animator.SetInteger( _lowerBodyDamageHash , _lowerBodyDamage );
 			_animator.SetInteger( _upperBodyDamageHash, _upperBodyDamage );
-
 			if (_lowerBodyDamage>_limpThreshold && _lowerBodyDamage<_crawlThreshold)
 				SetLayerActive( "Lower Body", true );
 			else
 				SetLayerActive( "Lower Body", false);
-
 			if (_upperBodyDamage>_upperBodyThreshold && _lowerBodyDamage<_crawlThreshold)
 				SetLayerActive( "Upper Body", true );
 			else
@@ -215,17 +172,11 @@ public class AIZombieStateMachine : AIStateMachine
 				
 		}
 	}
-
-	// -------------------------------------------------------------------
-	// Name	:	TakeDamage
-	// Desc	:	Processes the zombie's reaction to being dealt damage
-	// --------------------------------------------------------------------
 	public override void TakeDamage( Vector3 position, Vector3 force, int damage, Rigidbody bodyPart, CharacterManager characterManager, int hitDirection=0 )
 	{
 		if (GameSceneManager.instance!=null && GameSceneManager.instance.bloodParticles!=null)
 		{
 			ParticleSystem sys  = GameSceneManager.instance.bloodParticles;
-
 			if (sys)
 			{
 				sys.transform.position = position;
@@ -236,7 +187,6 @@ public class AIZombieStateMachine : AIStateMachine
 		}
 
 		float hitStrength = force.magnitude;
-
 		if (_boneControlType==AIBoneControlType.Ragdoll)
 		{
 			if (bodyPart!=null)
@@ -259,7 +209,6 @@ public class AIZombieStateMachine : AIStateMachine
 				{
 					_lowerBodyDamage+=damage;
 				}
-
 				UpdateAnimatorDamage();
 
 				if (_health>0)
@@ -274,12 +223,8 @@ public class AIZombieStateMachine : AIStateMachine
 
 			return;
 		}
-
-		// Get local space position of attacker
 		Vector3 attackerLocPos  = transform.InverseTransformPoint( characterManager.transform.position );
-
 		bool shouldRagdoll = (hitStrength>1.0f);
-
 		if (bodyPart!=null)
 		{
 			if (bodyPart.CompareTag("Head"))
@@ -301,9 +246,7 @@ public class AIZombieStateMachine : AIStateMachine
 				shouldRagdoll = true;
 			}
 		}
-
 		if (_boneControlType!=AIBoneControlType.Animated || isCrawling || IsLayerActive("Cinematic") || attackerLocPos.z<0) shouldRagdoll=true;
-
 		if (!shouldRagdoll)
 		{
 			float angle = 0.0f;
@@ -337,7 +280,6 @@ public class AIZombieStateMachine : AIStateMachine
 				_animator.SetInteger( _hitTypeHash, hitType ); 
 				_animator.SetTrigger( _hitTriggerHash );
 			}
-
 			return;
 		}
 		else
@@ -382,50 +324,28 @@ public class AIZombieStateMachine : AIStateMachine
 		}
 
 	}
-
-	// ----------------------------------------------------------------
-	// Name	:	Reanimate (coroutine)
-	// Desc	:	Starts the reanimation procedure
-	// ----------------------------------------------------------------
 	protected IEnumerator Reanimate ()
 	{
-		// Only reanimate if we are in a ragdoll state
 		if (_boneControlType!=AIBoneControlType.Ragdoll || _animator==null) yield break;
-
-		// Wait for the desired number of seconds before initiating the reanimation process
 		yield return new WaitForSeconds ( _reanimationWaitTime );
-
-		// Record time at start of reanimation procedure
 		_ragdollEndTime = Time.time;
-
-		// Set rigidbodies back to being kinematic
 		foreach ( Rigidbody body in _bodyParts )
 		{
 			body.isKinematic = true;
 		}
-
-		// Put us in reanimation mode
 		_boneControlType = AIBoneControlType.RagdollToAnim;
-
-		// Record postions and rotations of all bones prior to reanimation
 		foreach( BodyPartSnapshot snapShot in _bodyPartSnapShots )
 		{
 			snapShot.position 		= snapShot.transform.position;
 			snapShot.rotation 		= snapShot.transform.rotation;
 		}
-
-		// Record the ragdolls head and feet position
 		_ragdollHeadPosition = _animator.GetBoneTransform( HumanBodyBones.Head ).position;
 		_ragdollFeetPosition = (_animator.GetBoneTransform(HumanBodyBones.LeftFoot).position + _animator.GetBoneTransform(HumanBodyBones.RightFoot).position) * 0.5f;
 		_ragdollHipPosition  = _rootBone.position;
-
-		// Enable Animator
 		_animator.enabled = true;
-
 		if (_rootBone!=null)
 		{
 			float forwardTest;
-
 			switch (_rootBoneAlignment)
 			{
 				case AIBoneAlignmentType.ZAxis:
@@ -443,20 +363,12 @@ public class AIZombieStateMachine : AIStateMachine
 				default:
 					forwardTest = _rootBone.forward.y; break;
 			}
-
-			// Set the trigger in the animator
 			if (forwardTest>=0)
 				 _animator.SetTrigger( _reanimateFromBackHash ) ;
 			else
 				_animator.SetTrigger( _reanimateFromFrontHash );
 		}
 	}
-
-	// ---------------------------------------------------------------
-	// Name	:	LateUpdate
-	// Desc	:	Called by Unity at the end of every frame update. Used
-	//			here to perform reanimation.
-	// ---------------------------------------------------------------
 	protected virtual void LateUpdate()
 	{
 		if ( _boneControlType==AIBoneControlType.RagdollToAnim  )
@@ -475,7 +387,6 @@ public class AIZombieStateMachine : AIStateMachine
 			 			newRootPosition.y = Mathf.Max( hit.point.y, newRootPosition.y );
 			 		}
 			 	}
-
 			 	NavMeshHit navMeshHit;
 			 	Vector3 baseOffset = Vector3.zero;
 			 	if (_navAgent) baseOffset.y = _navAgent.baseOffset;
@@ -487,24 +398,14 @@ public class AIZombieStateMachine : AIStateMachine
 			 	{
 			 		transform.position = newRootPosition + baseOffset;
 			 	}
-
-
 			 	Vector3 ragdollDirection = _ragdollHeadPosition - _ragdollFeetPosition;
 			 	ragdollDirection.y = 0.0f;
-
 				Vector3 meanFeetPosition=0.5f*(_animator.GetBoneTransform(HumanBodyBones.LeftFoot).position + _animator.GetBoneTransform(HumanBodyBones.RightFoot).position);
 				Vector3 animatedDirection= _animator.GetBoneTransform(HumanBodyBones.Head).position - meanFeetPosition;
 				animatedDirection.y=0.0f;
-
-				//Try to match the rotations. Note that we can only rotate around Y axis, as the animated characted must stay upright,
-				//hence setting the y components of the vectors to zero. 
 				transform.rotation*=Quaternion.FromToRotation(animatedDirection.normalized,ragdollDirection.normalized);
 			}
-
-			// Calculate Interpolation value
 			float blendAmount = Mathf.Clamp01 ((Time.time - _ragdollEndTime - _mecanimTransitionTime) / _reanimationBlendTime);
-
-			// Calculate blended bone positions by interplating between ragdoll bone snapshots and animated bone positions
 			foreach( BodyPartSnapshot snapshot in _bodyPartSnapShots )
 			{
 				if (snapshot.transform == _rootBone )
@@ -514,9 +415,6 @@ public class AIZombieStateMachine : AIStateMachine
 
 				snapshot.transform.rotation = Quaternion.Slerp( snapshot.rotation, snapshot.transform.rotation, blendAmount );					
 			}
-
-
-			// Conditional to exit reanimation mode
 			if (blendAmount==1.0f)
 			{
 				_boneControlType = AIBoneControlType.Animated;
@@ -532,7 +430,6 @@ public class AIZombieStateMachine : AIStateMachine
 					_currentStateType = AIStateType.Alerted;
 				}
 			}
-
 		}
 	}
 }

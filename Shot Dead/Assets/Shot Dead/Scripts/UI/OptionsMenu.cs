@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
 public class OptionsMenu : MonoBehaviour
 {
     public Resolution[] resolutions;
-
     public TextMeshProUGUI resolutionLabel;
     public Toggle fullScreenTogg;
     public Toggle vSyncTogg;
-
     public int selectedResolution;
     void Start()
     {
@@ -22,9 +19,7 @@ public class OptionsMenu : MonoBehaviour
         {
             vSyncTogg.isOn = true;
         }
-
         bool foundRes = false;
-
         for(int i = 0; i < resolutions.Length; i++)
         {
             if (Screen.width == resolutions[i].horizontal && Screen.height == resolutions[i].vertical)
@@ -39,11 +34,9 @@ public class OptionsMenu : MonoBehaviour
             resolutionLabel.text = Screen.width.ToString() + " X " + Screen.height.ToString();
         }
     }
-
     public void DecreaseResolution()
     {
         selectedResolution--;
-
         if(selectedResolution < 0)
         {
             selectedResolution = 0;
@@ -52,7 +45,6 @@ public class OptionsMenu : MonoBehaviour
     public void IncreaseResolution()
     {
         selectedResolution++;
-
         if(selectedResolution > resolutions.Length - 1)
         {
             selectedResolution = resolutions.Length - 1;
@@ -72,7 +64,6 @@ public class OptionsMenu : MonoBehaviour
         {
             QualitySettings.vSyncCount = 0;
         }
-
         Screen.SetResolution(resolutions[selectedResolution].horizontal, resolutions[selectedResolution].vertical, fullScreenTogg.isOn);
     }
 }
