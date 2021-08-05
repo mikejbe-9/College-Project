@@ -22,6 +22,10 @@ TagManager:
   - button f6
   - button f4
   - button f3
+  - Ammo
+  - Aid
+  - NPC
+  - ResultCarrier
   layers:
   - Default
   - TransparentFX

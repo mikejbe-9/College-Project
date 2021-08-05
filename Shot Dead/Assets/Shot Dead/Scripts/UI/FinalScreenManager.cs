@@ -21,6 +21,6 @@ public class FinalScreenManager : MonoBehaviour
 
     public void ExitButton()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MAIN MENU");
     }
 }
