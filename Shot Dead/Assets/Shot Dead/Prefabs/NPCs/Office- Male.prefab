@@ -751,7 +751,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2495916506882553550}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 660b4175dbea87c4ebe6035b907282d1, type: 3}
+  m_Avatar: {fileID: 9000000, guid: b0b19997dd90bb046822607dbd4ad171, type: 3}
   m_Controller: {fileID: 0}
   m_CullingMode: 1
   m_UpdateMode: 0
@@ -787,8 +787,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.2
-  m_Center: {x: 0, y: 0.51, z: 0}
+  m_Radius: 1.38
+  m_Center: {x: 0, y: 0.85, z: 0}
 --- !u!1 &2501548421152058808
 GameObject:
   m_ObjectHideFlags: 0

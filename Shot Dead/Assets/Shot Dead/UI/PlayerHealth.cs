@@ -2,12 +2,9 @@
 
 public class PlayerHealth : MonoBehaviour
 {
+    public CharacterManager characterManager;
     public float maxHealthPoints = 100;
     public float currentHealthPoints;
-
-    [Header("Sounds")]
-    public AudioSource source;
-    public AudioClip[] deathClips;
 
     [HideInInspector] public string status;
 
@@ -20,7 +17,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Update()
     {
-        if(currentHealthPoints > 0)
+        if(characterManager._health > 0)
         {
             status = "ALIVE";
         }
@@ -29,18 +26,16 @@ public class PlayerHealth : MonoBehaviour
             status = "DEAD";
             OnDeath();
         }
-        if(currentHealthPoints > maxHealthPoints)
+        if(characterManager._health > maxHealthPoints)
         {
-            currentHealthPoints = maxHealthPoints;
+            characterManager._health = maxHealthPoints;
         }
     }
 
     void OnDeath()
     {
-        int i = Random.Range(0, deathClips.Length);
         if (!hasDied)
         {
-            source.PlayOneShot(deathClips[i]);
             hasDied = true;
         }
     }

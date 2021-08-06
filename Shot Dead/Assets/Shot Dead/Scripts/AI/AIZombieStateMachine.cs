@@ -13,6 +13,7 @@ public class BodyPartSnapshot
 }
 public class AIZombieStateMachine : AIStateMachine
 {
+	[SerializeField]    KillCounter             killCounter         = null;
 	[SerializeField]	[Range(10.0f, 360.0f)]	float _fov 			= 50.0f;
 	[SerializeField]	[Range(0.0f, 1.0f)]		float _sight 		= 0.5f;
 	[SerializeField]	[Range(0.0f, 1.0f)]		float _hearing		= 1.0f;
@@ -197,7 +198,9 @@ public class AIZombieStateMachine : AIStateMachine
 
 				if (bodyPart.CompareTag("Head"))
 				{
-					_health = Mathf.Max( _health-damage, 0);
+					//_health = Mathf.Max( _health-damage, 0);
+					_health = 0;
+					killCounter.headShotKills++;
 				}
 				else
 				if (bodyPart.CompareTag("Upper Body"))
@@ -219,6 +222,10 @@ public class AIZombieStateMachine : AIStateMachine
 					_reanimationCoroutine = Reanimate();
 					StartCoroutine( _reanimationCoroutine );
 				}
+                else
+                {
+					killCounter.killCount++;
+                }
 			}
 
 			return;
@@ -230,7 +237,10 @@ public class AIZombieStateMachine : AIStateMachine
 			if (bodyPart.CompareTag("Head"))
 			{
 				_health = Mathf.Max( _health-damage, 0);
-				if (health==0) shouldRagdoll = true;
+				if (health == 0)
+				{
+					shouldRagdoll = true;
+				}
 			}
 			else
 			if (bodyPart.CompareTag("Upper Body"))

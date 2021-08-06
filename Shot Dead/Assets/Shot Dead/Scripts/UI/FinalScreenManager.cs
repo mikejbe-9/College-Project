@@ -17,6 +17,7 @@ public class FinalScreenManager : MonoBehaviour
         gameResultLabel.text = gameCompletionState.gameCompletionStateText;
         livesRescuedLabel.text = gameCompletionState.livesRescued.ToString();
         scoreLabel.text = gameCompletionState.score.ToString();
+        totalKillsLabel.text = gameCompletionState.totalKills.ToString();
     }
 
     public void ExitButton()

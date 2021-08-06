@@ -12,6 +12,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Script References")]
     public Gun1 gun;
+    public CharacterManager characterManager;
     public PlayerHealth playerHealth;
     public Timer timer;
 
@@ -58,8 +59,8 @@ public class UIManager : MonoBehaviour
             img.color = new Color(255, 255, 255, 255);
             img.sprite = gun.icon;
         }
-        healthText.color = healthGradient.Evaluate(playerHealth.currentHealthPoints / 100);
-        healthText.text = playerHealth.currentHealthPoints.ToString();
+        healthText.color = healthGradient.Evaluate(characterManager._health / 100);
+        healthText.text = characterManager._health.ToString("0");
 
         //scoreCard.SetActive(Input.GetKey(KeyCode.Tab));
 
